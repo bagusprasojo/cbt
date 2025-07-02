@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load static %}
+{% load custom_filters %}
+
+{% block title %}Tinjau Jawaban Ujian{% endblock %}
+{% block content %}
+<div class="container mt-4">
+  <h5>Periksa kembali hasil pekerjaan Anda. Jika sudah yakin selesai silakan klik tombol <strong>Kumpulkan Ujian</strong></h5>
+  <a href="{% url 'ujian' %}" class="btn btn-outline-secondary btn-sm mx-1">Kembali ke Ujian </a>
+
+  <form method="post">
+    {% csrf_token %}
+    <div class="row mt-3">
+      {% for item in urutan_soal %}
+        <div class="col col-12 mb-2">
+          <div class="card {% if jawaban_dict|get_item:item.soal.id %}border-success{% else %}border-warning{% endif %}">
+            <div class="card-body">
+              <h6>Soal {{ item.urutan }}</h6>
+              <hr>
+              <p>{{ item.soal.teks|safe }}</p>              
+                {% with jawaban_dict|get_item:item.soal.id as jawab %}
+                {% if jawab %}
+                    <p><strong>Jawaban Anda:</strong> {{ jawab.huruf }}. {{ jawab.teks }}</p>
+                {% else %}
+                    <p><strong>Jawaban Anda:</strong> <span class="text-danger">Belum dijawab</span></p>
+                {% endif %}
+                {% endwith %}
+
+              </p>
+              <a href="{% url 'ujian' %}?nomor={{ item.urutan }}" class="btn btn-sm btn-outline-primary">Kerjakan</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    {% if semua_terjawab %}
+      <div class="mt-4 text-center">
+        <button class="btn btn-danger" name="kumpulkan" onclick="return confirm('Yakin ingin mengumpulkan?')">
+          Kumpulkan Ujian
+        </button>
+      </div>
+    {% else %}
+      <div class="mt-4 alert alert-warning text-center">
+        Masih ada soal yang belum dijawab.
+      </div>
+    {% endif %}
+  </form>
+</div>
+{% endblock %}

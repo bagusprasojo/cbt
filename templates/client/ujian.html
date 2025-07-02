@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4" style="max-width: 800px;">
+  <div class="row mb-1">
+    <div class="col-6">
+      <h6>Peserta: {{ request.user.first_name}} {{request.user.last_name}}</h6>
+    </div>
+    <div class="col-6 text-end">
+      <h6>Kelas: {{ request.user.kelas}}</h6>
+    </div>
+  </div>
+
+  <div class="row mb-2 border rounded-top ">
+    <div class="col-12 text-center mb-4">
+      <h3 class="text-center">{{ ujian.nama }}</h3>
+      <h4 class="text-center">{{ ujian.waktu_menit }} Menit</h4>
+    </div>
+  </div>
+  
+  
+  <div class="row mb-4 border rounded-bottom ">
+    <div class="row mt-3">
+      <div class="col-6">
+        <h5>Soal {{ nomor }} dari {{ total }}</h5>
+      </div>
+      <div class="col-6 text-end">
+        <a href="{% url 'tinjau_soal' %}" class="btn btn-outline-primary btn-sm">Tinjau Jawaban</a>
+      </div>
+    </div>
+    <hr>
+
+
+    <form method="post">
+      {% csrf_token %}
+      <p>{{ soal.teks|safe }}</p>
+      {% for opsi, teks in opsi_dict.items %}
+        <div class="form-check mt-3">
+          <input class="form-check-input" type="radio" name="jawaban" id="opsi{{ opsi }}"
+                value="{{ opsi }}" {% if jawaban == opsi %}checked{% endif %}>
+          <label class="form-check-label" for="opsi{{ opsi }}">
+            {{ opsi }}. {{ teks }}
+          </label>
+        </div>
+      {% endfor %}
+
+
+      <div class="mt-4 d-flex justify-content-between">
+        {% if nomor > 1 %}
+          <button name="sebelumnya" class="btn btn-secondary">&larr; Sebelumnya</button>
+        {% else %}
+          <div></div>
+        {% endif %}
+
+        <button name="simpan" class="btn btn-primary">Simpan Jawaban</button>
+
+        {% if nomor < total %}
+          <button name="selanjutnya" class="btn btn-secondary">Selanjutnya &rarr;</button>
+        {% endif %}
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+  <h5>Hasil Ujian</h5>
+
+  {% if jawaban %}
+    <table class="table table-bordered mt-3">
+      <thead class="table-light">
+        <tr>
+          <th>No</th>
+          <th>Pertanyaan</th>
+          <th>Jawaban Anda</th>          
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in jawaban %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ item.soal.teks }}</td>
+            <td>{{ item.jawaban }}</td>            
+            <td>
+              {% if item.jawaban == item.soal.jawaban_benar %}
+                <span class="badge bg-success">Benar</span>
+              {% else %}
+                <span class="badge bg-danger">Salah</span>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="alert alert-info">
+      Total Skor: <strong>{{ jumlah_benar }}/{{ jumlah_total }}</strong>
+    </div>
+
+  {% else %}
+    <p class="text-muted">Belum ada jawaban yang dikumpulkan.</p>
+  {% endif %}
+</div>
+{% endblock %}
