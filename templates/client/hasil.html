@@ -17,7 +17,7 @@
         {% for item in jawaban %}
           <tr>
             <td>{{ forloop.counter }}</td>
-            <td>{{ item.soal.teks }}</td>
+            <td>{{ item.soal.teks:safe }}</td>
             <td>{{ item.jawaban }}</td>            
             <td>
               {% if item.jawaban == item.soal.jawaban_benar %}
